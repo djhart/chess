@@ -10,9 +10,7 @@ class Piece
 		@space = space
 		@color = color
 		
-	end
-
-	
+	end	
 
 	def capture
 		@space = 0
@@ -22,27 +20,11 @@ class Piece
 	def self.captured
 		@@captured
 	end
-
-	def self.display
-		@@board.each_with_index {|x,i| x.each_with_index {|y,j| 
-			if y == 0  
-				if (i+j)%2 == 0 
-					print @@black
-				else 
-					print @@white
-				end
-			else
-				print y
-			end}
-		puts ""}
-	end
-
-	def self.board
-		@@board
-	end
-
+	
 	def move(space)
+		@space.piece = nil
 		@space = space
+		space.piece = self
 	end
 		
 
@@ -50,26 +32,37 @@ class Piece
 end
 
 class Bishop < Piece
+	@white = "\u265d "
+	@black = "\u2657 "
 
 end
 
 class King < Piece
-
+	@white = "\u265a "
+	@black = "\u2654 "
 end
 
 class Knight < Piece
+	@white = "\u265e "
+	@black = "\u2658 "
 
 end
 
 class Pawn < Piece
+	@white = "\u265f "
+	@black = "\u2659 "
 
 end
 
 class Queen < Piece
+	@white = "\u265b "
+	@black = "\u2655 "
 
 end
 
 class Rook < Piece
+	@white = "\u265c "
+	@black = "\u2656 "
 
 end
 
@@ -77,8 +70,8 @@ class Space
 
 	attr_reader :xcoord, :ycoord, :color, :board
 	attr_accessor :piece
-	@@white = "\u25a2 "
-	@@black = "\u25a3 " 
+	@@white = "\u25a3 "
+	@@black = "\u25a2 " 
 	
 
 	def initialize(xcoord, ycoord)
