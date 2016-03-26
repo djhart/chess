@@ -3,7 +3,8 @@ require 'spec_helper.rb'
 describe Piece do 
 
 	before :each do 
-		@whiteRa1 = Piece.new([1,1], "white")
+		Space.make_board
+		@whiteRa1 = Piece.new(Space.board[:a1], "white")
 	end
 
 	describe "#new" do 
@@ -15,7 +16,7 @@ describe Piece do
 	describe "#capture" do
 		it "adds to captured and zeroes coord" do
 			@whiteRa1.capture
-			expect(@whiteRa1.coord).to eql(0)
+			expect(@whiteRa1.space).to eql(0)
 			expect(Piece.captured[0]).to eql(@whiteRa1)
 		end
 	end

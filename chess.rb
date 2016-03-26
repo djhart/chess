@@ -4,11 +4,13 @@ class Piece
 	attr_accessor :captured, :space, :board
 	attr_reader :color
 	
-	
 
 	def initialize(space, color)
 		@space = space
 		@color = color
+		@space.piece = self
+		@@captured ||= []
+
 		
 	end	
 
@@ -26,43 +28,82 @@ class Piece
 		@space = space
 		space.piece = self
 	end
+
+	def self.populate(board)
+		board.each {|x, y| y.piece = Pawn.new(y, "white")}
+	end
 		
 
 
 end
 
 class Bishop < Piece
-	@white = "\u265d "
-	@black = "\u2657 "
+	@@white = "\u265d "
+	@@black = "\u2657 "
+	def initialize(space, color)
+		super
+		@color == "white" ? @color = @@white : @color = @@black
+		
+	end
 
 end
 
 class King < Piece
-	@white = "\u265a "
-	@black = "\u2654 "
+	@@white = "\u265a "
+	@@black = "\u2654 "
+	def initialize(space, color)
+		super
+		@color == "white" ? @color = @@white : @color = @@black
+		
+	end
+
 end
 
 class Knight < Piece
-	@white = "\u265e "
-	@black = "\u2658 "
+	@@white = "\u265e "
+	@@black = "\u2658 "
+	def initialize(space, color)
+		super
+		@color == "white" ? @color = @@white : @color = @@black
+		
+	end
+
 
 end
 
 class Pawn < Piece
-	@white = "\u265f "
-	@black = "\u2659 "
+	@@white = "\u265f "
+	@@black = "\u2659 "
+	def initialize(space, color)
+		super
+		@color == "white" ? @color = @@white : @color = @@black
+		
+	end
+
 
 end
 
 class Queen < Piece
-	@white = "\u265b "
-	@black = "\u2655 "
+	@@white = "\u265b "
+	@@black = "\u2655 "
+	def initialize(space, color)
+		super
+		@color == "white" ? @color = @@white : @color = @@black
+		
+	end
+
 
 end
 
 class Rook < Piece
-	@white = "\u265c "
-	@black = "\u2656 "
+	@@white = "\u265c "
+	@@black = "\u2656 "
+	def initialize(space, color)
+		super
+		@color == "white" ? @color = @@white : @color = @@black
+		
+	end
+
 
 end
 
@@ -77,7 +118,7 @@ class Space
 	def initialize(xcoord, ycoord)
 		@xcoord = xcoord
 		@ycoord = ycoord
-		@piece = nil
+		@piece = piece
 		(xcoord + ycoord).even? ? @color = @@black : @color = @@white
 		
 	end
@@ -97,7 +138,7 @@ class Space
 		('1'..'8').to_a.reverse!.each{|y|
 			('a'..'h').to_a.each {|x|
 				if @@board[(x+y).to_sym].occupied? 
-					print @@board[(x+y).to_sym].piece
+					print @@board[(x+y).to_sym].piece.color
 				else
 					print @@board[(x+y).to_sym].color
 				end
@@ -122,7 +163,12 @@ class Player
 end
 
 Space.make_board
+#board = Bishop.new(Space.board[:c1], "white")
+Piece.populate(Space.board)
 Space.display
+#print board
+
+#print Space.board[:b2].piece.color
 
 
 
