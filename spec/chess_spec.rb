@@ -41,7 +41,7 @@ describe Piece do
 describe Bishop do
 	before :each do 
 		Space.make_board
-		@bish = Bishop.new(Space.board[:c4], "white")
+		@test = Bishop.new(Space.board[:c4], "white")
 		Rook.new(Space.board[:e6],"black")
 		King.new(Space.board[:a2], "white")
 	end
@@ -49,10 +49,56 @@ describe Bishop do
 
 	describe "#legal?" do 
 		it "checks legality of move" do
-			expect(@bish.legal?(Space.board[:e6])).to eql(true)
-			expect(@bish.legal?(Space.board[:a2])).to eql(false)
-			expect(@bish.legal?(Space.board[:a6])).to eql(true)
-			expect(@bish.legal?(Space.board[:c6])).to eql(false)
+			expect(@test.legal?(Space.board[:e6])).to eql(true)
+			expect(@test.legal?(Space.board[:a2])).to eql(false)
+			expect(@test.legal?(Space.board[:a6])).to eql(true)
+			expect(@test.legal?(Space.board[:c6])).to eql(false)
+		end
+	end
+
+end
+
+
+describe Rook do
+	before :each do 
+		Space.make_board
+		@test = Rook.new(Space.board[:a6], "white")
+		Rook.new(Space.board[:e6],"black")
+		King.new(Space.board[:a2], "white")
+	end
+
+
+	describe "#legal?" do 
+		it "checks legality of move" do
+			expect(@test.legal?(Space.board[:e6])).to eql(true)
+			expect(@test.legal?(Space.board[:a2])).to eql(false)
+			expect(@test.legal?(Space.board[:h6])).to eql(false)
+			expect(@test.legal?(Space.board[:c6])).to eql(true)
+		end
+	end
+
+end
+
+describe Queen do
+	before :each do 
+		Space.make_board
+		@test = Queen.new(Space.board[:c4], "white")
+		Rook.new(Space.board[:e6],"black")
+		King.new(Space.board[:a2], "white")
+	end
+
+
+	describe "#legal?" do 
+		it "checks legality of move" do
+			expect(@test.legal?(Space.board[:e6])).to eql(true)
+			expect(@test.legal?(Space.board[:a2])).to eql(false)
+			expect(@test.legal?(Space.board[:a6])).to eql(true)
+			expect(@test.legal?(Space.board[:b6])).to eql(false)
+			expect(@test.legal?(Space.board[:f7])).to eql(false)
+			expect(@test.legal?(Space.board[:c6])).to eql(true)
+			expect(@test.legal?(Space.board[:a4])).to eql(true)
+			expect(@test.legal?(Space.board[:h8])).to eql(false)
+
 		end
 	end
 

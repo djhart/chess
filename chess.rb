@@ -13,8 +13,7 @@ class Piece
 		@@pieces ||= []
 		@@pieces << self
 		@player = color
-
-		
+		@history = []		
 	end	
 
 	def self.key(arr)
@@ -33,6 +32,7 @@ class Piece
 	
 	def move(space)
 		@space.piece = nil
+		@history << @space
 		@space = space
 		space.piece = self
 	end
@@ -94,12 +94,10 @@ class Bishop < Piece
 			tempy = @space.coord[1]
 			a = dest.coord[0] <=> @space.coord[0]
 			b = dest.coord[1] <=> @space.coord[1]
-			print "a = #{a} b = #{b} tempx = #{tempx} tempy = #{tempy}"
 			until [tempx, tempy] == dest.coord
 				tempx += a
 				tempy += b
 				tempkey = Piece.key([tempx, tempy])
-				puts Space.cartesian[tempx][tempy]
 				if !(@@pieces.find {|x| x.space == Space.board[tempkey]} == nil)
 					legal = false unless  [tempx, tempy] == dest.coord
 				
@@ -160,6 +158,34 @@ class Queen < Piece
 		
 	end
 
+	def legal?(dest)
+		legal = true
+			if dest.occupied?
+				if dest.piece.player == @player
+					legal = false
+				end
+			end
+
+		if (((@space.coord[0] - dest.coord[0]).abs == (@space.coord[1] - dest.coord[1]).abs) && legal == true) || (((@space.coord[0] - dest.coord[0]).abs == 0) ||  ((@space.coord[1] - dest.coord[1]).abs == 0) && legal == true)
+			tempx = @space.coord[0]
+			tempy = @space.coord[1]
+			a = dest.coord[0] <=> @space.coord[0]
+			b = dest.coord[1] <=> @space.coord[1]
+				until [tempx, tempy] == dest.coord
+					tempx += a
+					tempy += b
+					tempkey = Piece.key([tempx, tempy])
+						if !(@@pieces.find {|x| x.space == Space.board[tempkey]} == nil)
+							legal = false unless  [tempx, tempy] == dest.coord
+						end
+					end
+
+			else
+				legal = false
+			end
+		return legal
+	end
+
 
 end
 
@@ -172,12 +198,40 @@ class Rook < Piece
 		
 	end
 
+	def legal?(dest)
+		legal = true
+			if dest.occupied?
+				if dest.piece.player == @player
+					legal = false
+				end
+			end
+
+		if ((@space.coord[0] - dest.coord[0]).abs == 0) ||  ((@space.coord[1] - dest.coord[1]).abs == 0) && legal == true
+			tempx = @space.coord[0]
+			tempy = @space.coord[1]
+			a = dest.coord[0] <=> @space.coord[0]
+			b = dest.coord[1] <=> @space.coord[1]
+			until [tempx, tempy] == dest.coord
+				tempx += a
+				tempy += b
+				tempkey = Piece.key([tempx, tempy])
+				if !(@@pieces.find {|x| x.space == Space.board[tempkey]} == nil)
+					legal = false unless  [tempx, tempy] == dest.coord
+				end
+			end
+
+			else
+				legal = false
+			end
+		return legal
+	end
+
 
 end
 
 class Space
 
-	attr_reader :xcoord, :ycoord, :color, :board, :cartesian
+	attr_reader :xcoord, :ycoord, :color, :board#, :cartesian
 	attr_accessor :piece
 	@@white = "\u25a3 "
 	@@black = "\u25a2 " 
@@ -200,7 +254,7 @@ class Space
 		@@cartesian =  Array.new(8) {Array.new(8)}	
 		('a'..'h').to_a.each_with_index{|x, i| ('1'..'8').to_a.each_with_index{|y, j| 
 			@@board[(x+y).to_sym] = Space.new(i, j)
-			@@cartesian[i][j] = @@board[(x+y).to_sym]
+			#@@cartesian[i][j] = @@board[(x+y).to_sym]
 		}}
 	end
 
@@ -208,9 +262,9 @@ class Space
 		@@board
 	end
 
-	def self.cartesian
-		@@cartesian
-	end
+	#def self.cartesian
+		#@@cartesian
+	#end
 
 	def self.display
 		('1'..'8').to_a.reverse!.each{|y|
