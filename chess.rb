@@ -2,7 +2,7 @@
 
 class Piece
 	attr_accessor :captured, :space, :board, :pieces
-	attr_reader :color, :player	
+	attr_reader :color, :player, :type	
 
 	def initialize(space, color)
 		@space = space
@@ -34,11 +34,11 @@ class Piece
 		@@captured
 	end
 	
-	def move(space)
+	def move(dest)
 		@space.piece = nil
 		@history << @space
-		@space = space
-		space.piece = self
+		@space = dest
+		@space.piece = self
 	end
 
 	def self.populate(board)
@@ -78,7 +78,8 @@ class Bishop < Piece
 	@@black = "\u2657 "
 	def initialize(space, color)
 		super
-		@color == "white" ? @color = @@white : @color = @@black		
+		@color == "white" ? @color = @@white : @color = @@black
+		@type = "bishop"		
 	end
 
 	def legal?(dest)
@@ -117,6 +118,7 @@ class King < Piece
 	def initialize(space, color)
 		super
 		@color == "white" ? @color = @@white : @color = @@black		
+		@type = "king"
 	end
 
 	def legal?(dest)
@@ -139,6 +141,7 @@ class Knight < Piece
 	def initialize(space, color)
 		super
 		@color == "white" ? @color = @@white : @color = @@black		
+		@type = "knight"
 	end
 
 	def legal?(dest)
@@ -162,7 +165,7 @@ class Pawn < Piece
 	def initialize(space, color)
 		super
 		@color == "white" ? @color = @@white : @color = @@black
-		
+		@type = "pawn"
 	end
 
 	def legal?(dest)
@@ -204,7 +207,7 @@ class Queen < Piece
 	def initialize(space, color)
 		super
 		@color == "white" ? @color = @@white : @color = @@black
-		
+		@type = "queen"
 	end
 
 	def legal?(dest)
@@ -244,6 +247,7 @@ class Rook < Piece
 	def initialize(space, color)
 		super
 		@color == "white" ? @color = @@white : @color = @@black		
+		@type = "rook"
 	end
 
 	def legal?(dest)
@@ -340,22 +344,52 @@ class Player
 	attr_reader :color, :king
 	def initialize(color)
 		@color = color
-		@king = Piece.pieces.detect{|x| x.player == @color}
+		@king = Piece.pieces.detect{|x| (x.player == @color) && (x.type == "king")}
 	end
 
 	def turn(board)
-		piece, target = 0
-		until board.key?(piece) && board.key?(target)
-			puts "move which piece?"
-			piece = gets.chomp.to_sym
-			puts "to which square"
-			target = gets.chomp.to_sym
+		
+		done = false
+		until done
+		start, targetKey = 0
+			until board.key?(start) && board.key?(targetKey)
+				Space.display
+				puts "#{@color}: move which piece?"
+				start = gets.chomp.to_sym
+				piece = board[start].piece
+				puts piece
+				puts "to which square"
+				targetKey = gets.chomp.to_sym
+				target = board[targetKey]
+				puts target
+			end
+
+			cap = nil
+
+			if target.occupied?
+				cap = target.piece
+			end
+
+			if piece.legal?(target)
+				piece.move(target)
+				if !check?(cap) 
+					done = true
+					cap.capture if cap
+				else
+					piece.move(piece.history[-2])
+					2.times {|i| piece.history.delete_at(-1)}
+					if cap
+						cap.move(target)
+						cap.history.delete_at(-1)
+					end
+				end
+			end
 		end
 	end
 
-	def check?
+	def check?(cap = nil)
 		check = false
-		enemy = Piece.pieces.select {|x| x.player != @color}		
+		enemy = Piece.pieces.select {|x| (x.player != @color) || x != cap}		
 		enemy.each{|y| check = true if y.legal?(@king.space)}
 		return check
 	end
@@ -363,5 +397,23 @@ end
 
 Space.make_board
 Piece.populate(Space.board)
-Space.display
+#Space.display
+playerOne = Player.new("white")
+playerTwo = Player.new("black")
+puts playerOne.king
+turnCount = 0
+checkmate = false
+
+while checkmate == false
+	if turnCount % 2 == 0
+		playerOne.turn(Space.board)
+		puts playerOne.king
+		turnCount += 1
+		puts turnCount
+	else
+		playerTwo.turn(Space.board)
+		turnCount += 1
+		puts turnCount
+	end
+end
 
