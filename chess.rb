@@ -2,8 +2,7 @@
 
 class Piece
 	attr_accessor :captured, :space, :board, :pieces
-	attr_reader :color, :player
-	
+	attr_reader :color, :player	
 
 	def initialize(space, color)
 		@space = space
@@ -21,9 +20,14 @@ class Piece
 		return (a[arr[0]] + (arr[1] + 1).to_s).to_sym
 	end
 
+	def self.pieces
+		@@pieces
+	end
+
 	def capture
 		@space = 0
 		@@captured << self
+		@@pieces.delete(self)
 	end
 
 	def self.captured
@@ -67,9 +71,6 @@ class Piece
 			end
 		}
 	end
-		
-
-
 end
 
 class Bishop < Piece
@@ -77,11 +78,12 @@ class Bishop < Piece
 	@@black = "\u2657 "
 	def initialize(space, color)
 		super
-		@color == "white" ? @color = @@white : @color = @@black
-		
+		@color == "white" ? @color = @@white : @color = @@black		
 	end
 
 	def legal?(dest)
+		x = @space.coord[0] - dest.coord[0]
+		y = @space.coord[1] - dest.coord[1]
 		legal = true
 		if dest.occupied?
 			if dest.piece.player == @player
@@ -89,7 +91,7 @@ class Bishop < Piece
 			end
 		end
 
-		if ((@space.coord[0] - dest.coord[0]).abs == (@space.coord[1] - dest.coord[1]).abs) && legal == true
+		if (x.abs == y.abs) && legal == true
 			tempx = @space.coord[0]
 			tempy = @space.coord[1]
 			a = dest.coord[0] <=> @space.coord[0]
@@ -98,20 +100,15 @@ class Bishop < Piece
 				tempx += a
 				tempy += b
 				tempkey = Piece.key([tempx, tempy])
-				if !(@@pieces.find {|x| x.space == Space.board[tempkey]} == nil)
-					legal = false unless  [tempx, tempy] == dest.coord
-				
+				if !(@@pieces.find {|c| c.space == Space.board[tempkey]} == nil)
+					legal = false unless  [tempx, tempy] == dest.coord				
 				end
 			end
-
 		else
 			legal = false
 		end
 		return legal
 	end
-
-
-
 end
 
 class King < Piece
@@ -119,10 +116,21 @@ class King < Piece
 	@@black = "\u2654 "
 	def initialize(space, color)
 		super
-		@color == "white" ? @color = @@white : @color = @@black
-		
+		@color == "white" ? @color = @@white : @color = @@black		
 	end
 
+	def legal?(dest)
+		x = @space.coord[0] - dest.coord[0]
+		y = @space.coord[1] - dest.coord[1]
+		legal = true
+		legal = false unless (x.abs <= 1) && (y.abs <= 1)
+		if dest.occupied?
+  		if dest.piece.player == @player
+    		legal = false
+    	end
+    end	
+    return legal
+	end
 end
 
 class Knight < Piece
@@ -130,11 +138,22 @@ class Knight < Piece
 	@@black = "\u2658 "
 	def initialize(space, color)
 		super
-		@color == "white" ? @color = @@white : @color = @@black
-		
+		@color == "white" ? @color = @@white : @color = @@black		
 	end
 
+	def legal?(dest)
+		x = @space.coord[0] - dest.coord[0]
+		y = @space.coord[1] - dest.coord[1]
+		legal = true
+		legal = false unless ((x.abs == 1) && (y.abs == 2)) || ((x.abs == 2) && (y.abs == 1))
 
+		if dest.occupied?
+  		if dest.piece.player == @player
+    		legal = false
+    	end
+    end		
+  return legal
+	end
 end
 
 class Pawn < Piece
@@ -146,7 +165,37 @@ class Pawn < Piece
 		
 	end
 
+	def legal?(dest)
+		legal = true
+		x = @space.coord[0] - dest.coord[0]
+		y = @space.coord[1] - dest.coord[1]
 
+		unless (((y == -1) || (y == -2)) && @player == "white") || (((y == 1) || (y == 2)) && @player == "black") 
+	  	legal = false
+		end
+
+		if (y.abs == 2) && !(@history.empty?)
+  		legal = false
+		end
+
+
+		if dest.occupied?
+  		if dest.piece.player == @player
+    		legal = false
+	  	elsif !(x.abs == 1)
+  		  legal = false
+	  	end
+		end
+
+		if x.abs > 1
+	  	legal = false
+		end
+
+		if x.abs == 1 			
+  		legal = false unless dest.occupied?	  	
+  	end
+ 	  return legal
+  end
 end
 
 class Queen < Piece
@@ -160,13 +209,16 @@ class Queen < Piece
 
 	def legal?(dest)
 		legal = true
-			if dest.occupied?
-				if dest.piece.player == @player
-					legal = false
-				end
-			end
+		x = @space.coord[0] - dest.coord[0]
+		y = @space.coord[1] - dest.coord[1]
 
-		if (((@space.coord[0] - dest.coord[0]).abs == (@space.coord[1] - dest.coord[1]).abs) && legal == true) || (((@space.coord[0] - dest.coord[0]).abs == 0) ||  ((@space.coord[1] - dest.coord[1]).abs == 0) && legal == true)
+		if dest.occupied?
+			if dest.piece.player == @player
+				legal = false
+			end
+		end
+
+		if ((x.abs == y.abs) && legal == true) || (((x.abs == 0) ||  (y.abs == 0)) && legal == true)
 			tempx = @space.coord[0]
 			tempy = @space.coord[1]
 			a = dest.coord[0] <=> @space.coord[0]
@@ -175,18 +227,15 @@ class Queen < Piece
 					tempx += a
 					tempy += b
 					tempkey = Piece.key([tempx, tempy])
-						if !(@@pieces.find {|x| x.space == Space.board[tempkey]} == nil)
-							legal = false unless  [tempx, tempy] == dest.coord
-						end
+					if !(@@pieces.find {|c| c.space == Space.board[tempkey]} == nil)
+						legal = false unless  [tempx, tempy] == dest.coord
 					end
-
-			else
-				legal = false
-			end
+				end
+		else
+			legal = false
+		end
 		return legal
 	end
-
-
 end
 
 class Rook < Piece
@@ -194,19 +243,20 @@ class Rook < Piece
 	@@black = "\u2656 "
 	def initialize(space, color)
 		super
-		@color == "white" ? @color = @@white : @color = @@black
-		
+		@color == "white" ? @color = @@white : @color = @@black		
 	end
 
 	def legal?(dest)
 		legal = true
-			if dest.occupied?
-				if dest.piece.player == @player
-					legal = false
-				end
+		x = @space.coord[0] - dest.coord[0]
+		y = @space.coord[1] - dest.coord[1]
+		if dest.occupied?
+			if dest.piece.player == @player
+				legal = false
 			end
+		end
 
-		if ((@space.coord[0] - dest.coord[0]).abs == 0) ||  ((@space.coord[1] - dest.coord[1]).abs == 0) && legal == true
+		if (x.abs == 0) ||  (y.abs == 0) && legal == true
 			tempx = @space.coord[0]
 			tempy = @space.coord[1]
 			a = dest.coord[0] <=> @space.coord[0]
@@ -225,8 +275,6 @@ class Rook < Piece
 			end
 		return legal
 	end
-
-
 end
 
 class Space
@@ -251,7 +299,7 @@ class Space
 
 	def self.make_board
 		@@board = {}
-		@@cartesian =  Array.new(8) {Array.new(8)}	
+		#@@cartesian =  Array.new(8) {Array.new(8)}	
 		('a'..'h').to_a.each_with_index{|x, i| ('1'..'8').to_a.each_with_index{|y, j| 
 			@@board[(x+y).to_sym] = Space.new(i, j)
 			#@@cartesian[i][j] = @@board[(x+y).to_sym]
@@ -285,15 +333,14 @@ class Space
 	def occupied?
 		@piece == nil ? false : true
 	end
-
 end
-
 
 class Player
 
-	attr_reader :color
+	attr_reader :color, :king
 	def initialize(color)
 		@color = color
+		@king = Piece.pieces.detect{|x| x.player == @color}
 	end
 
 	def turn(board)
@@ -304,25 +351,17 @@ class Player
 			puts "to which square"
 			target = gets.chomp.to_sym
 		end
-
 	end
 
-
-
-
-
-
+	def check?
+		check = false
+		enemy = Piece.pieces.select {|x| x.player != @color}		
+		enemy.each{|y| check = true if y.legal?(@king.space)}
+		return check
+	end
 end
 
 Space.make_board
-#board = Bishop.new(Space.board[:c1], "white")
 Piece.populate(Space.board)
 Space.display
-
-print Space.board[:c1].piece.legal?(Space.board[:d2])
-
-
-
-
-
 
