@@ -4,6 +4,8 @@ describe Player do
 	
 	describe "#initialize" do
 		it "makes a player" do
+			Space.make_board
+			King.new(Space.board[:c4],"white")
 			@test = Player.new("white")
 			expect(@test).to be_an_instance_of Player
 		end

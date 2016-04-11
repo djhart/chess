@@ -2,7 +2,7 @@
 
 class Piece
 	attr_accessor :captured, :space, :board, :pieces
-	attr_reader :color, :player, :type	
+	attr_reader :color, :player, :type, :history
 
 	def initialize(space, color)
 		@space = space
@@ -303,10 +303,8 @@ class Space
 
 	def self.make_board
 		@@board = {}
-		#@@cartesian =  Array.new(8) {Array.new(8)}	
 		('a'..'h').to_a.each_with_index{|x, i| ('1'..'8').to_a.each_with_index{|y, j| 
-			@@board[(x+y).to_sym] = Space.new(i, j)
-			#@@cartesian[i][j] = @@board[(x+y).to_sym]
+			@@board[(x+y).to_sym] = Space.new(i, j)			
 		}}
 	end
 
@@ -314,9 +312,7 @@ class Space
 		@@board
 	end
 
-	#def self.cartesian
-		#@@cartesian
-	#end
+	
 
 	def self.display
 		('1'..'8').to_a.reverse!.each{|y|
@@ -331,6 +327,9 @@ class Space
 			puts ""
 		}
 		print "  A B C D E F G H"
+		puts ""
+		print "CAPTURED: "
+		Piece.captured.each {|x| print x.color}
 		puts ""
 	end
 
@@ -376,13 +375,16 @@ class Player
 					done = true
 					cap.capture if cap
 				else
-					piece.move(piece.history[-2])
+					puts "can't move into check"
+					piece.move(piece.history[-1])
 					2.times {|i| piece.history.delete_at(-1)}
 					if cap
 						cap.move(target)
 						cap.history.delete_at(-1)
 					end
 				end
+      else 
+        puts "==illegal move=="
 			end
 		end
 	end
@@ -393,6 +395,34 @@ class Player
 		enemy.each{|y| check = true if y.legal?(@king.space)}
 		return check
 	end
+
+  def mate?
+    mate = true
+    test = Piece.pieces.select {|x| (x.player = @color)}  
+    test.each{|y|
+      moves = Space.board.select{|space| y.legal?(space)}
+      moves.each{|space| 
+        y.move(space)
+        if space.occupied?
+          cap = space.piece
+        end
+
+        if !check?(cap) 
+          mate = false
+        end
+
+        y.move(piece.history[-1])
+          2.times {|i| piece.history.delete_at(-1)}
+          if cap
+            cap.move(space)
+            cap.history.delete_at(-1)
+          end
+      }
+    }
+    return mate
+  end
+
+
 end
 
 Space.make_board
@@ -406,14 +436,24 @@ checkmate = false
 
 while checkmate == false
 	if turnCount % 2 == 0
-		playerOne.turn(Space.board)
-		puts playerOne.king
-		turnCount += 1
-		puts turnCount
+    if PlayerOne.mate?
+      checkmate == true
+      puts "#{PlayerTwo.color} WINS!"
+    else
+		  playerOne.turn(Space.board)
+		  puts playerOne.king
+		  turnCount += 1
+		  puts turnCount
+    end
 	else
-		playerTwo.turn(Space.board)
-		turnCount += 1
-		puts turnCount
+    if PlayerTwo.mate?
+      checkmate == true
+      puts "#{PlayerOne.color} WINS!"
+    else
+		  playerTwo.turn(Space.board)
+		  turnCount += 1
+		  puts turnCount
+    end
 	end
 end
 
