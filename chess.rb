@@ -269,14 +269,14 @@ class Rook < Piece
         tempx += a
         tempy += b
         tempkey = Piece.key([tempx, tempy])
-        if !(@@pieces.find {|x| x.space == Space.board[tempkey]} == nil)
+        if !(@@pieces.find {|token| token.space == Space.board[tempkey]} == nil)
           legal = false unless  [tempx, tempy] == dest.coord
         end
       end
 
-      else
-        legal = false
-      end
+    else
+      legal = false
+    end
     return legal
   end
 end
@@ -435,7 +435,7 @@ checkmate = false
 while checkmate == false
   if turnCount % 2 == 0
     if playerOne.mate?
-      checkmate == true
+      checkmate = true
       puts "#{playerTwo.color} WINS!"
     else
       playerOne.turn(Space.board)
@@ -445,7 +445,7 @@ while checkmate == false
     end
   else
     if playerTwo.mate?
-      checkmate == true
+      checkmate = true
       puts "#{playerOne.color} WINS!"
     else
       playerTwo.turn(Space.board)
