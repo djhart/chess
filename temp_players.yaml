@@ -1,0 +1,25 @@
+---
+- !ruby/object:Player
+  color: white
+  king: &1 !ruby/object:King
+    space: !ruby/object:Space
+      xcoord: 4
+      ycoord: 0
+      piece: *1
+      color: "▢ "
+    color: "♚ "
+    player: white
+    history: []
+    type: king
+- !ruby/object:Player
+  color: black
+  king: &2 !ruby/object:King
+    space: !ruby/object:Space
+      xcoord: 4
+      ycoord: 7
+      piece: *2
+      color: "▣ "
+    color: "♔ "
+    player: black
+    history: []
+    type: king

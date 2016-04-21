@@ -1,9 +1,24 @@
+require 'yaml'
 class Player
 
-  attr_reader :color, :king
+  attr_reader :color, :king, :players
   def initialize(color)
     @color = color
     @king = Piece.pieces.detect{|x| (x.player == @color) && (x.type == "king")}
+    @@players ||= []
+    @@players << self
+  end
+
+  def save_game(data, name)
+    yaml = YAML.dump(data)
+    game_file = File.new("#{name}.yaml","w")
+    game_file.write(yaml)
+  end
+
+  def load_game(name)
+    game_file = File.new("#{name}.yaml","r")
+    yaml = game_file.read
+    YAML.load(yaml)
   end
 
   def turn(board)
@@ -16,7 +31,7 @@ class Player
         puts "#{@color}: move which piece?"
         start = gets.chomp.to_sym
         piece = board[start].piece
-        puts piece
+        puts piece.type
         puts "to which square"
         targetKey = gets.chomp.to_sym
         target = board[targetKey]
@@ -57,26 +72,37 @@ class Player
   end
 
   def mate?
+    #mate = false
     mate = true
     test = Piece.pieces.select {|x| (x.player == @color)}  
     test.each{|y|
       moves = Space.board.select{|ind, space| y.legal?(space)}
+      #print "#{y} moves: #{moves}"
       moves.each{|ind, space| 
-        y.move(space)
+        #save_game(Piece.pieces, "temp_pieces")
+        #save_game(Space.board, "temp_board")
+        #save_game(@@players, "temp_players")
+        
+        cap = nil
         if space.occupied?
           cap = space.piece
         end
+
+        y.move(space)
 
         if !check?(cap) 
           mate = false
         end
 
-        y.move(y.history[-1])
-          2.times {|i| y.history.delete_at(-1)}
-          if cap
+        if cap
             cap.move(space)
             cap.history.delete_at(-1)
-          end
+        end
+
+        y.move(y.history[-1])
+        #puts y.space
+        2.times {|i| y.history.delete_at(-1)}
+        
       }
     }
     return mate
