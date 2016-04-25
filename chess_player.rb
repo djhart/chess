@@ -32,25 +32,17 @@ class Player
     until done
       start, targetKey = 0
       save = [:s, :S]
+      
       until (board.key?(start) && board.key?(targetKey)) || save.include?(start)
         Space.display
         puts "#{@color}: move which piece? S to save, L to load"
         start = gets.chomp.to_sym
-        case start
-        when :s, :S
-          save_game(Piece.pieces, "pieces")
-          save_game(Space.board, "board")
-          save_game(@@players, "players")
-          save_game(turnCount, "turnCount")
-          puts "saved!"                  
-        else
-          piece = board[start].piece
-          puts piece.type
-          puts "to which square"
-          targetKey = gets.chomp.to_sym
-          target = board[targetKey]
-          puts target
-        end
+        piece = board[start].piece
+        puts piece.type
+        puts "to which square"
+        targetKey = gets.chomp.to_sym
+        target = board[targetKey]
+        puts target
       end
 
       if (board.key?(start) && board.key?(targetKey))
@@ -62,7 +54,6 @@ class Player
 
         if piece.legal?(target)
           piece.move(target)
-          #@@turnCount += 1
           if !check?(cap) 
             done = true
             cap.capture if cap

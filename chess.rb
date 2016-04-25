@@ -28,6 +28,7 @@ else
   #turnCount = 0
 end
 
+game = {:board => Space.board, :players => [playerOne, playerTwo], :pieces => Piece.pieces, :turn => turnCount} 
 checkmate = false
 turnCount = 0
 
