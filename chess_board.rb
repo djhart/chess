@@ -1,7 +1,11 @@
+require 'yaml'
 class Space
+  class << self
+    attr_accessor :board
+  end
 
-  attr_reader :xcoord, :ycoord, :color, :board#, :cartesian
-  attr_accessor :piece
+  attr_reader :xcoord, :ycoord, :color
+  attr_accessor :piece#, :board
   @@white = "\u25a3 "
   @@black = "\u25a2 " 
   

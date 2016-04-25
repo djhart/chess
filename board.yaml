@@ -9,27 +9,25 @@
     history: []
     type: rook
   color: "▢ "
-:a2: &3 !ruby/object:Space
+:a2: &2 !ruby/object:Space
   xcoord: 0
   ycoord: 1
-  piece: 
-  color: "▣ "
-:a3: &4 !ruby/object:Space
-  xcoord: 0
-  ycoord: 2
-  piece: 
-  color: "▢ "
-:a4: &2 !ruby/object:Space
-  xcoord: 0
-  ycoord: 3
   piece: !ruby/object:Pawn
     space: *2
     color: "♟ "
     player: white
-    history:
-    - *3
-    - *4
+    history: []
     type: pawn
+  color: "▣ "
+:a3: !ruby/object:Space
+  xcoord: 0
+  ycoord: 2
+  piece: 
+  color: "▢ "
+:a4: !ruby/object:Space
+  xcoord: 0
+  ycoord: 3
+  piece: 
   color: "▣ "
 :a5: !ruby/object:Space
   xcoord: 0
@@ -41,62 +39,55 @@
   ycoord: 5
   piece: 
   color: "▣ "
-:a7: &5 !ruby/object:Space
+:a7: &3 !ruby/object:Space
   xcoord: 0
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *5
+    space: *3
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▢ "
-:a8: &6 !ruby/object:Space
+:a8: &4 !ruby/object:Space
   xcoord: 0
   ycoord: 7
   piece: !ruby/object:Rook
-    space: *6
+    space: *4
     color: "♖ "
     player: black
     history: []
     type: rook
   color: "▣ "
-:b1: &14 !ruby/object:Space
+:b1: &5 !ruby/object:Space
   xcoord: 1
   ycoord: 0
-  piece: 
+  piece: !ruby/object:Knight
+    space: *5
+    color: "♞ "
+    player: white
+    history: []
+    type: knight
   color: "▣ "
 :b2: &7 !ruby/object:Space
   xcoord: 1
   ycoord: 1
-  piece: !ruby/object:Bishop
-    space: *7
-    color: "♝ "
-    player: white
-    history:
-    - &12 !ruby/object:Space
-      xcoord: 2
-      ycoord: 0
-      piece: 
-      color: "▢ "
-    - *4
-    type: bishop
+  piece: 
   color: "▢ "
-:b3: &9 !ruby/object:Space
+:b3: !ruby/object:Space
   xcoord: 1
   ycoord: 2
   piece: 
   color: "▣ "
-:b4: &8 !ruby/object:Space
+:b4: &6 !ruby/object:Space
   xcoord: 1
   ycoord: 3
   piece: !ruby/object:Pawn
-    space: *8
+    space: *6
     color: "♟ "
     player: white
     history:
     - *7
-    - *9
     type: pawn
   color: "▢ "
 :b5: !ruby/object:Space
@@ -104,72 +95,61 @@
   ycoord: 4
   piece: 
   color: "▣ "
-:b6: !ruby/object:Space
+:b6: &8 !ruby/object:Space
   xcoord: 1
   ycoord: 5
-  piece: 
-  color: "▢ "
-:b7: &10 !ruby/object:Space
-  xcoord: 1
-  ycoord: 6
   piece: !ruby/object:Pawn
-    space: *10
+    space: *8
     color: "♙ "
     player: black
-    history: []
+    history:
+    - &9 !ruby/object:Space
+      xcoord: 1
+      ycoord: 6
+      piece: 
+      color: "▣ "
     type: pawn
-  color: "▣ "
-:b8: &11 !ruby/object:Space
+  color: "▢ "
+:b7: *9
+:b8: &10 !ruby/object:Space
   xcoord: 1
   ycoord: 7
   piece: !ruby/object:Knight
-    space: *11
+    space: *10
     color: "♘ "
     player: black
     history: []
     type: knight
   color: "▢ "
-:c1: *12
-:c2: &13 !ruby/object:Space
+:c1: &11 !ruby/object:Space
+  xcoord: 2
+  ycoord: 0
+  piece: !ruby/object:Bishop
+    space: *11
+    color: "♝ "
+    player: white
+    history: []
+    type: bishop
+  color: "▢ "
+:c2: &12 !ruby/object:Space
   xcoord: 2
   ycoord: 1
-  piece: !ruby/object:Queen
-    space: *13
-    color: "♛ "
-    player: white
-    history:
-    - &19 !ruby/object:Space
-      xcoord: 3
-      ycoord: 0
-      piece: 
-      color: "▣ "
-    - *14
-    - *9
-    - *12
-    type: queen
-  color: "▣ "
-:c3: &15 !ruby/object:Space
-  xcoord: 2
-  ycoord: 2
-  piece: !ruby/object:Knight
-    space: *15
-    color: "♞ "
-    player: white
-    history:
-    - *14
-    - *4
-    type: knight
-  color: "▢ "
-:c4: &16 !ruby/object:Space
-  xcoord: 2
-  ycoord: 3
   piece: !ruby/object:Pawn
-    space: *16
+    space: *12
     color: "♟ "
     player: white
-    history:
-    - *13
+    history: []
     type: pawn
+  color: "▣ "
+:c3: !ruby/object:Space
+  xcoord: 2
+  ycoord: 2
+  piece: 
+  color: "▢ "
+:c4: !ruby/object:Space
+  xcoord: 2
+  ycoord: 3
+  piece: 
   color: "▣ "
 :c5: !ruby/object:Space
   xcoord: 2
@@ -181,59 +161,55 @@
   ycoord: 5
   piece: 
   color: "▣ "
-:c7: &17 !ruby/object:Space
+:c7: &13 !ruby/object:Space
   xcoord: 2
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *17
+    space: *13
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▢ "
-:c8: &18 !ruby/object:Space
+:c8: &14 !ruby/object:Space
   xcoord: 2
   ycoord: 7
   piece: !ruby/object:Bishop
-    space: *18
+    space: *14
     color: "♗ "
     player: black
     history: []
     type: bishop
   color: "▣ "
-:d1: *19
-:d2: &20 !ruby/object:Space
+:d1: &15 !ruby/object:Space
+  xcoord: 3
+  ycoord: 0
+  piece: !ruby/object:Queen
+    space: *15
+    color: "♛ "
+    player: white
+    history: []
+    type: queen
+  color: "▣ "
+:d2: &16 !ruby/object:Space
   xcoord: 3
   ycoord: 1
-  piece: !ruby/object:King
-    space: *20
-    color: "♚ "
+  piece: !ruby/object:Pawn
+    space: *16
+    color: "♟ "
     player: white
-    history:
-    - &25 !ruby/object:Space
-      xcoord: 4
-      ycoord: 0
-      piece: 
-      color: "▢ "
-    - *19
-    type: king
+    history: []
+    type: pawn
   color: "▢ "
-:d3: &22 !ruby/object:Space
+:d3: !ruby/object:Space
   xcoord: 3
   ycoord: 2
   piece: 
   color: "▣ "
-:d4: &21 !ruby/object:Space
+:d4: !ruby/object:Space
   xcoord: 3
   ycoord: 3
-  piece: !ruby/object:Pawn
-    space: *21
-    color: "♟ "
-    player: white
-    history:
-    - *20
-    - *22
-    type: pawn
+  piece: 
   color: "▢ "
 :d5: !ruby/object:Space
   xcoord: 3
@@ -245,59 +221,55 @@
   ycoord: 5
   piece: 
   color: "▢ "
-:d7: &23 !ruby/object:Space
+:d7: &17 !ruby/object:Space
   xcoord: 3
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *23
+    space: *17
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▣ "
-:d8: &24 !ruby/object:Space
+:d8: &18 !ruby/object:Space
   xcoord: 3
   ycoord: 7
   piece: !ruby/object:Queen
-    space: *24
+    space: *18
     color: "♕ "
     player: black
     history: []
     type: queen
   color: "▢ "
-:e1: *25
-:e2: &26 !ruby/object:Space
+:e1: &19 !ruby/object:Space
+  xcoord: 4
+  ycoord: 0
+  piece: !ruby/object:King
+    space: *19
+    color: "♚ "
+    player: white
+    history: []
+    type: king
+  color: "▢ "
+:e2: &20 !ruby/object:Space
   xcoord: 4
   ycoord: 1
-  piece: !ruby/object:Bishop
-    space: *26
-    color: "♝ "
+  piece: !ruby/object:Pawn
+    space: *20
+    color: "♟ "
     player: white
-    history:
-    - &31 !ruby/object:Space
-      xcoord: 5
-      ycoord: 0
-      piece: 
-      color: "▣ "
-    - *22
-    type: bishop
+    history: []
+    type: pawn
   color: "▣ "
-:e3: &28 !ruby/object:Space
+:e3: !ruby/object:Space
   xcoord: 4
   ycoord: 2
   piece: 
   color: "▢ "
-:e4: &27 !ruby/object:Space
+:e4: !ruby/object:Space
   xcoord: 4
   ycoord: 3
-  piece: !ruby/object:Pawn
-    space: *27
-    color: "♟ "
-    player: white
-    history:
-    - *26
-    - *28
-    type: pawn
+  piece: 
   color: "▣ "
 :e5: !ruby/object:Space
   xcoord: 4
@@ -309,48 +281,55 @@
   ycoord: 5
   piece: 
   color: "▣ "
-:e7: &29 !ruby/object:Space
+:e7: &21 !ruby/object:Space
   xcoord: 4
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *29
+    space: *21
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▢ "
-:e8: &30 !ruby/object:Space
+:e8: &22 !ruby/object:Space
   xcoord: 4
   ycoord: 7
   piece: !ruby/object:King
-    space: *30
+    space: *22
     color: "♔ "
     player: black
     history: []
     type: king
   color: "▣ "
-:f1: *31
-:f2: &33 !ruby/object:Space
+:f1: &23 !ruby/object:Space
+  xcoord: 5
+  ycoord: 0
+  piece: !ruby/object:Bishop
+    space: *23
+    color: "♝ "
+    player: white
+    history: []
+    type: bishop
+  color: "▣ "
+:f2: &24 !ruby/object:Space
   xcoord: 5
   ycoord: 1
-  piece: 
+  piece: !ruby/object:Pawn
+    space: *24
+    color: "♟ "
+    player: white
+    history: []
+    type: pawn
   color: "▢ "
-:f3: &34 !ruby/object:Space
+:f3: !ruby/object:Space
   xcoord: 5
   ycoord: 2
   piece: 
   color: "▣ "
-:f4: &32 !ruby/object:Space
+:f4: !ruby/object:Space
   xcoord: 5
   ycoord: 3
-  piece: !ruby/object:Pawn
-    space: *32
-    color: "♟ "
-    player: white
-    history:
-    - *33
-    - *34
-    type: pawn
+  piece: 
   color: "▢ "
 :f5: !ruby/object:Space
   xcoord: 5
@@ -362,67 +341,55 @@
   ycoord: 5
   piece: 
   color: "▢ "
-:f7: &35 !ruby/object:Space
+:f7: &25 !ruby/object:Space
   xcoord: 5
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *35
+    space: *25
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▣ "
-:f8: &36 !ruby/object:Space
+:f8: &26 !ruby/object:Space
   xcoord: 5
   ycoord: 7
   piece: !ruby/object:Bishop
-    space: *36
+    space: *26
     color: "♗ "
     player: black
     history: []
     type: bishop
   color: "▢ "
-:g1: &37 !ruby/object:Space
+:g1: &27 !ruby/object:Space
   xcoord: 6
   ycoord: 0
-  piece: !ruby/object:Rook
-    space: *37
-    color: "♜ "
+  piece: !ruby/object:Knight
+    space: *27
+    color: "♞ "
     player: white
-    history:
-    - &43 !ruby/object:Space
-      xcoord: 7
-      ycoord: 0
-      piece: 
-      color: "▣ "
-    - *14
-    - *12
-    - *19
-    - *25
-    - *31
-    type: rook
+    history: []
+    type: knight
   color: "▢ "
-:g2: &39 !ruby/object:Space
+:g2: &28 !ruby/object:Space
   xcoord: 6
   ycoord: 1
-  piece: 
+  piece: !ruby/object:Pawn
+    space: *28
+    color: "♟ "
+    player: white
+    history: []
+    type: pawn
   color: "▣ "
-:g3: &40 !ruby/object:Space
+:g3: !ruby/object:Space
   xcoord: 6
   ycoord: 2
   piece: 
   color: "▢ "
-:g4: &38 !ruby/object:Space
+:g4: !ruby/object:Space
   xcoord: 6
   ycoord: 3
-  piece: !ruby/object:Pawn
-    space: *38
-    color: "♟ "
-    player: white
-    history:
-    - *39
-    - *40
-    type: pawn
+  piece: 
   color: "▣ "
 :g5: !ruby/object:Space
   xcoord: 6
@@ -434,48 +401,50 @@
   ycoord: 5
   piece: 
   color: "▣ "
-:g7: &41 !ruby/object:Space
+:g7: &29 !ruby/object:Space
   xcoord: 6
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *41
+    space: *29
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▢ "
-:g8: &42 !ruby/object:Space
+:g8: &30 !ruby/object:Space
   xcoord: 6
   ycoord: 7
   piece: !ruby/object:Knight
-    space: *42
+    space: *30
     color: "♘ "
     player: black
     history: []
     type: knight
   color: "▣ "
-:h1: *43
-:h2: &44 !ruby/object:Space
+:h1: &31 !ruby/object:Space
+  xcoord: 7
+  ycoord: 0
+  piece: !ruby/object:Rook
+    space: *31
+    color: "♜ "
+    player: white
+    history: []
+    type: rook
+  color: "▣ "
+:h2: &32 !ruby/object:Space
   xcoord: 7
   ycoord: 1
   piece: !ruby/object:Pawn
-    space: *44
+    space: *32
     color: "♟ "
     player: white
     history: []
     type: pawn
   color: "▢ "
-:h3: &45 !ruby/object:Space
+:h3: !ruby/object:Space
   xcoord: 7
   ycoord: 2
-  piece: !ruby/object:Knight
-    space: *45
-    color: "♞ "
-    player: white
-    history:
-    - *37
-    - *34
-    type: knight
+  piece: 
   color: "▣ "
 :h4: !ruby/object:Space
   xcoord: 7
@@ -492,21 +461,21 @@
   ycoord: 5
   piece: 
   color: "▢ "
-:h7: &46 !ruby/object:Space
+:h7: &33 !ruby/object:Space
   xcoord: 7
   ycoord: 6
   piece: !ruby/object:Pawn
-    space: *46
+    space: *33
     color: "♙ "
     player: black
     history: []
     type: pawn
   color: "▣ "
-:h8: &47 !ruby/object:Space
+:h8: &34 !ruby/object:Space
   xcoord: 7
   ycoord: 7
   piece: !ruby/object:Rook
-    space: *47
+    space: *34
     color: "♖ "
     player: black
     history: []

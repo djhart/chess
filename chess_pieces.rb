@@ -1,5 +1,12 @@
+require 'yaml'
+
 class Piece
-  attr_accessor :captured, :space, :board, :pieces
+  
+  class << self
+    attr_accessor :pieces
+  end
+
+  attr_accessor :captured, :space, :board#, :pieces
   attr_reader :color, :player, :type, :history
 
   def initialize(space, color)

@@ -1,16 +1,38 @@
 require_relative 'chess_pieces'
 require_relative 'chess_player'
 require_relative 'chess_board'
+require 'yaml'
 
+def load(name)
+  game_file = File.new("#{name}.yaml","r")
+  yaml = game_file.read
+  YAML.load(yaml)
+end
 
-Space.make_board
-Piece.populate(Space.board)
-#Space.display
-playerOne = Player.new("white")
-playerTwo = Player.new("black")
-#puts playerOne.king
-turnCount = 0
+def load_game
+  Piece.pieces = load("pieces")
+  Space.board = load("board")
+  Player.players = load("players")
+  #turnCount = load("turnCount")
+end
+
+puts "Load? [Y/N]"
+
+if gets.chomp.upcase == "Y"
+  load_game
+else
+  Space.make_board
+  Piece.populate(Space.board)
+  playerOne = Player.new("white")
+  playerTwo = Player.new("black")
+  #turnCount = 0
+end
+
 checkmate = false
+turnCount = 0
+
+
+
 
 while checkmate == false
   if turnCount % 2 == 0
@@ -19,12 +41,12 @@ while checkmate == false
         checkmate = true
         puts "#{playerTwo.color} WINS!"
       else
-        playerOne.turn(Space.board)
+        playerOne.turn(Space.board, turnCount)
         turnCount += 1
         puts "turn number: #{turnCount}"  
       end
     else
-        playerOne.turn(Space.board)
+        playerOne.turn(Space.board, turnCount)
         turnCount += 1
         puts "turn number: #{turnCount}"
     end
@@ -34,12 +56,12 @@ while checkmate == false
         checkmate = true
         puts "#{playerOne.color} WINS!"
       else
-        playerTwo.turn(Space.board)
+        playerTwo.turn(Space.board, turnCount)
         turnCount += 1
         puts "turn number: #{turnCount}"  
       end
     else
-      playerTwo.turn(Space.board)
+      playerTwo.turn(Space.board, turnCount)
       turnCount += 1
       puts "turn number: #{turnCount}" 
     end
