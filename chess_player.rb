@@ -8,41 +8,62 @@ class Player
 
   attr_reader :color, :king
   #attr_accessor :turnCount, :players
-  def initialize(color)
+  def initialize(color, pieces)
     @color = color
-    @king = Piece.pieces.detect{|x| (x.player == @color) && (x.type == "king")}
+    @king = pieces.detect{|x| (x.player == @color) && (x.type == "king")}
     @@players ||= []
     @@players << self
     #@@turnCount = 0
   end
 
-  #def self.turnCount
-  #  @@turnCount
-  #end
+  def display(board)
+    ('1'..'8').to_a.reverse!.each{|y|
+      print "#{y} "
+      ('a'..'h').to_a.each {|x|
+        if board[(x+y).to_sym].occupied? 
+          print board[(x+y).to_sym].piece.color
+        else
+          print board[(x+y).to_sym].color
+        end
+      } 
+      puts ""
+    }
+    print "  A B C D E F G H"
+    puts ""
+    #print "CAPTURED: "
+    #Piece.captured.each {|x| print x.color}
+    puts ""
+  end
 
-  def save_game(data, name)
-    yaml = YAML.dump(data)
-    game_file = File.new("#{name}.yaml","w")
-    game_file.write(yaml)
-  end  
+def save_game(game)
+  yaml = YAML.dump(game)
+  game_file = File.new("chess_game.yaml","w")
+  game_file.write(yaml)
+end  
 
-  def turn(board, turnCount)
-    
+  
+
+  def turn(game)
+    board = game[:board]
+    pieces = game[:pieces]
     done = false
     until done
-      start, targetKey = 0
-      save = [:s, :S]
-      
+      start, targetKey = 0 
+      save = [:s, :S]     
       until (board.key?(start) && board.key?(targetKey)) || save.include?(start)
-        Space.display
-        puts "#{@color}: move which piece? S to save, L to load"
+        display(board)
+        puts "#{@color}: move which piece? S to save."
         start = gets.chomp.to_sym
-        piece = board[start].piece
-        puts piece.type
-        puts "to which square"
-        targetKey = gets.chomp.to_sym
-        target = board[targetKey]
-        puts target
+        if save.include?(start)
+          save_game(game)
+        else
+          piece = board[start].piece
+          puts piece.type
+          puts "to which square"
+          targetKey = gets.chomp.to_sym
+          target = board[targetKey]
+          puts target
+        end
       end
 
       if (board.key?(start) && board.key?(targetKey))
@@ -54,7 +75,7 @@ class Player
 
         if piece.legal?(target)
           piece.move(target)
-          if !check?(cap) 
+          if !check?(cap, pieces) 
             done = true
             cap.capture if cap
           else
@@ -73,18 +94,18 @@ class Player
     end
   end
 
-  def check?(cap = nil)
+  def check?(cap = nil, pieces)
     check = false
-    enemy = Piece.pieces.select {|x| (x.player != @color) || x != cap}		
+    enemy = pieces.select {|x| (x.player != @color) || x != cap}		
     enemy.each{|y| check = true if y.legal?(@king.space)}
     return check
   end
 
-  def mate?
+  def mate?(board, pieces)
     mate = true
-    test = Piece.pieces.select {|x| (x.player == @color)}  
+    test = pieces.select {|x| (x.player == @color)}  
     test.each{|y|
-      moves = Space.board.select{|ind, space| y.legal?(space)}
+      moves = board.select{|ind, space| y.legal?(space)}
       moves.each{|ind, space|         
         cap = nil
         if space.occupied?

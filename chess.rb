@@ -3,69 +3,56 @@ require_relative 'chess_player'
 require_relative 'chess_board'
 require 'yaml'
 
-def load(name)
-  game_file = File.new("#{name}.yaml","r")
+def load
+  game_file = File.new("chess_game.yaml","r")
   yaml = game_file.read
   YAML.load(yaml)
 end
 
-def load_game
-  Piece.pieces = load("pieces")
-  Space.board = load("board")
-  Player.players = load("players")
-  #turnCount = load("turnCount")
-end
+#def save_game
+#  yaml = YAML.dump(game)
+#  game_file = File.new("chess_game.yaml","w")
+#  game_file.write(yaml)
+#end  
 
 puts "Load? [Y/N]"
 
 if gets.chomp.upcase == "Y"
-  load_game
+  game = load
 else
   Space.make_board
   Piece.populate(Space.board)
-  playerOne = Player.new("white")
-  playerTwo = Player.new("black")
-  #turnCount = 0
+  playerOne = Player.new("white", Piece.pieces)
+  playerTwo = Player.new("black", Piece.pieces)
+  turnCount = 0
 end
 
-game = {:board => Space.board, :players => [playerOne, playerTwo], :pieces => Piece.pieces, :turn => turnCount} 
-checkmate = false
-turnCount = 0
+if game.empty?
+  game = {:board => Space.board, :players => [playerOne, playerTwo], :pieces => Piece.pieces, :turn => turnCount} 
+end
 
+def play(game)
+  checkmate = false
 
-
-
-while checkmate == false
-  if turnCount % 2 == 0
-    if playerOne.check?
-      if playerOne.mate?
+  while checkmate == false
+    player = game[:players][game[:turn] % 2]
+    enemy = game[:players][(game[:turn] + 1) % 2]
+    if player.check?(game[:pieces])
+      if player.mate?(game[:board], game[:pieces])
         checkmate = true
-        puts "#{playerTwo.color} WINS!"
+        puts "#{enemy.color} WINS!"
       else
-        playerOne.turn(Space.board, turnCount)
-        turnCount += 1
-        puts "turn number: #{turnCount}"  
+        player.turn(game)
+        game[:turn] += 1
+        puts "turn number: #{game[:turn]}"  
       end
     else
-        playerOne.turn(Space.board, turnCount)
-        turnCount += 1
-        puts "turn number: #{turnCount}"
-    end
-  else
-    if playerTwo.check?
-      if playerTwo.mate?
-        checkmate = true
-        puts "#{playerOne.color} WINS!"
-      else
-        playerTwo.turn(Space.board, turnCount)
-        turnCount += 1
-        puts "turn number: #{turnCount}"  
-      end
-    else
-      playerTwo.turn(Space.board, turnCount)
-      turnCount += 1
-      puts "turn number: #{turnCount}" 
-    end
+     player.turn(game)
+     game[:turn] += 1
+     puts "turn number: #{game[:turn]}"
+    end  
   end
 end
+
+play(game)
 
