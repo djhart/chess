@@ -33,26 +33,7 @@ class Space
     @@board
   end
 
-  
 
-  def self.display
-    ('1'..'8').to_a.reverse!.each{|y|
-      print "#{y} "
-      ('a'..'h').to_a.each {|x|
-        if @@board[(x+y).to_sym].occupied? 
-          print @@board[(x+y).to_sym].piece.color
-        else
-          print @@board[(x+y).to_sym].color
-        end
-      } 
-      puts ""
-    }
-    print "  A B C D E F G H"
-    puts ""
-    print "CAPTURED: "
-    Piece.captured.each {|x| print x.color}
-    puts ""
-  end
 
   def occupied?
     @piece == nil ? false : true

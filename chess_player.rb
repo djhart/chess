@@ -16,7 +16,7 @@ class Player
     #@@turnCount = 0
   end
 
-  def display(board)
+  def display(board, captured)
     ('1'..'8').to_a.reverse!.each{|y|
       print "#{y} "
       ('a'..'h').to_a.each {|x|
@@ -30,8 +30,8 @@ class Player
     }
     print "  A B C D E F G H"
     puts ""
-    #print "CAPTURED: "
-    #Piece.captured.each {|x| print x.color}
+    print "CAPTURED: "
+    captured.each {|x| print x.color} unless captured.empty?
     puts ""
   end
 
@@ -46,12 +46,13 @@ end
   def turn(game)
     board = game[:board]
     pieces = game[:pieces]
+    captured = game[:captured]
     done = false
     until done
       start, targetKey = 0 
       save = [:s, :S]     
       until (board.key?(start) && board.key?(targetKey)) || save.include?(start)
-        display(board)
+        display(board, captured)
         puts "#{@color}: move which piece? S to save."
         start = gets.chomp.to_sym
         if save.include?(start)
@@ -77,7 +78,12 @@ end
           piece.move(target)
           if !check?(cap, pieces) 
             done = true
-            cap.capture if cap
+            if cap
+              cap.capture
+              return cap
+            else
+              return nil
+            end
           else
             puts "can't move into check"
             piece.move(piece.history[-1])

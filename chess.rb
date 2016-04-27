@@ -25,16 +25,17 @@ else
   playerOne = Player.new("white", Piece.pieces)
   playerTwo = Player.new("black", Piece.pieces)
   turnCount = 0
+  game = {:board => Space.board, :players => [playerOne, playerTwo], :pieces => Piece.pieces,\
+   :turn => turnCount, :captured => []} 
 end
 
-if game.empty?
-  game = {:board => Space.board, :players => [playerOne, playerTwo], :pieces => Piece.pieces, :turn => turnCount} 
-end
+
 
 def play(game)
   checkmate = false
 
   while checkmate == false
+    game[:captured].compact!
     player = game[:players][game[:turn] % 2]
     enemy = game[:players][(game[:turn] + 1) % 2]
     if player.check?(game[:pieces])
@@ -42,12 +43,12 @@ def play(game)
         checkmate = true
         puts "#{enemy.color} WINS!"
       else
-        player.turn(game)
+        game[:captured] << player.turn(game)
         game[:turn] += 1
         puts "turn number: #{game[:turn]}"  
       end
     else
-     player.turn(game)
+     game[:captured] << player.turn(game)
      game[:turn] += 1
      puts "turn number: #{game[:turn]}"
     end  
